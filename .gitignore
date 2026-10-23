@@ -1,0 +1,11 @@
+.vs/
+vendor/
+node_modules/
+*.log
+.sql
+*.env
+.DS_Store
+Thumbs.db
+*.cache
+.phpunit.result.cache
+credenciales.php

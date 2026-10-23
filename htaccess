@@ -1,0 +1,41 @@
+# ============================================================
+# .htaccess — TecAsesora
+# ============================================================
+# Requiere mod_rewrite habilitado en Apache.
+# En XAMPP ya viene habilitado por defecto.
+# ============================================================
+
+Options -Indexes
+RewriteEngine On
+
+# ── Redirigir / a index.php ──────────────────────────────────
+# Permite URLs limpias: /usuarios en lugar de /index.php?page=usuarios
+# (opcional, Brandon puede implementar esto cuando quiera)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-z_\-]+)/?$ index.php?page=$1 [QSA,L]
+
+# ── Seguridad: bloquear acceso directo a carpetas sensibles ──
+# Nadie puede acceder a /pages/, /components/ o /layout/ directamente
+RewriteRule ^(pages|components|layout)/ - [F,L]
+
+# ── Seguridad: ocultar extensiones .php (opcional) ──────────
+# RewriteRule ^([a-z_\-]+)$ $1.php [L]
+
+# ── Headers de seguridad ─────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# ── Caché de assets estáticos ────────────────────────────────
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css             "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType image/png            "access plus 1 month"
+    ExpiresByType image/jpg            "access plus 1 month"
+    ExpiresByType image/jpeg           "access plus 1 month"
+    ExpiresByType image/svg+xml        "access plus 1 month"
+</IfModule>
